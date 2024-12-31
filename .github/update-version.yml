@@ -12,6 +12,9 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
+      with:
+        persist-credentials: false
+        fetch-depth: 0    
 
     - name: Get the new tag
       run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
