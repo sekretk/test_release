@@ -23,8 +23,13 @@ jobs:
       run: echo "$TAG_NAME" > version.txt
 
     - name: Commit & Push changes
-      uses: actions-js/push@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: main
-        force: true
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git checkout main  # Switch to the main branch
+        git pull origin main  # Make sure you're up to date
+        git add version.txt
+        git commit -m "Update version.txt to $TAG_NAME"
+        git push origin main
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
