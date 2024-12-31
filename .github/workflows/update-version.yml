@@ -12,6 +12,9 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
+      with:
+        persist-credentials: false
+        fetch-depth: 0    
 
     - name: Get the new tag
       run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
@@ -19,12 +22,22 @@ jobs:
     - name: Update version.txt
       run: echo "$TAG_NAME" > version.txt
 
-    - name: Commit and push changes
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Commit & Push changes
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git checkout main  # Switch to the main branch
+        git pull origin main  # Make sure you're up to date
         git add version.txt
         git commit -m "Update version.txt to $TAG_NAME"
-        git push origin HEAD:refs/heads/${GITHUB_REF_NAME}
+        git push origin main
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Merge 
+      uses: devmasx/merge-branch@master
+      with:
+        type: now
+        from_branch: $TAG_NAME
+        target_branch: main
+        github_token: ${{ secrets.GITHUB_TOKEN }}
