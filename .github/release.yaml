@@ -1,0 +1,23 @@
+
+changelog:
+  exclude:
+    labels:
+      - ignore
+    authors:
+      - octocat
+  categories:
+    - title: Features
+      labels:
+        - feature
+    - title: Fixes
+      labels:
+        - bug
+    - title: Improvements
+      labels:
+        - enhancement
+    - title: Infra
+      labels:
+        - process
+    - title: Other
+      labels:
+        - "*"
